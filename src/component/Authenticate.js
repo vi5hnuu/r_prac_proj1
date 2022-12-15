@@ -1,4 +1,5 @@
-import { useEffect, useState, useReducer } from 'react'
+import { useEffect, useState, useReducer, useContext } from 'react'
+import AuthContext from '../context/AuthContext'
 import './Authenticate.css'
 
 function emailReducer(state, action) {
@@ -20,7 +21,8 @@ function passReducer(state, action) {
     return { value: '', isValid: false }
 }
 
-function Authenticate(props) {
+function Authenticate() {
+    const ctx = useContext(AuthContext)
     const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: true })
     const [passState, dispatchPass] = useReducer(passReducer, { value: '', isValid: true })
     const [isFormValid, setIsFormValid] = useState(false)
@@ -49,7 +51,7 @@ function Authenticate(props) {
     }
     function logInhandler(event) {
         event.preventDefault()
-        props.onLogIn()
+        ctx.onLogIn()
     }
     return <main>
         <form className='form' onSubmit={logInhandler}>
