@@ -1,0 +1,15 @@
+.invalid {
+  background-color: rgb(243, 205, 205) !important;
+  border: 2px solid rgba(249, 165, 165, 0.867) !important;
+}
+.input {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  background-color: rgb(198, 244, 198);
+  border: 2px solid #0f0;
+}
+.input:focus {
+  /* border: 2px solid #741188; */
+  outline: none;
+  /* background-color: #e9b8f3; */
+}

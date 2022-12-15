@@ -1,6 +1,7 @@
 import { useEffect, useState, useReducer, useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 import './Authenticate.css'
+import Input from './Input'
 
 function emailReducer(state, action) {
     if (action.type === "USER_INPUT") {
@@ -57,15 +58,26 @@ function Authenticate() {
         <form className='form' onSubmit={logInhandler}>
             <div className='form_control'>
                 <label>Email</label>
-                <input className={!emailState.isValid ? 'invalid' : ''}
+                <Input
+                    isValid={emailState.isValid}
                     onBlur={validateEmail}
-                    value={emailState.value} type='email' placeholder='Enter email' onChange={onEmailChange}></input>
+                    value={emailState.value}
+                    onChange={onEmailChange}
+                    type='email'
+                    placeholder='Enter email'
+                />
             </div>
             <div className='form_control'>
                 <label>Password</label>
-                <input className={!passState.isValid ? 'invalid' : ''}
+                <Input
+                    isValid={passState.isValid}
                     onBlur={validatePass}
-                    value={passState.value} type='password' placeholder='Enter Password' onChange={onPassChange}></input>
+                    value={passState.value}
+                    onChange={onPassChange}
+                    type='password'
+                    placeholder='Enter password'
+                />
+
             </div>
             <button className='btn_login' type='submit' disabled={!(isFormValid)}>LogIn</button>
         </form>
