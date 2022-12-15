@@ -1,31 +1,51 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useReducer } from 'react'
 import './Authenticate.css'
 
+function emailReducer(state, action) {
+    if (action.type === "USER_INPUT") {
+        return { value: action.value, isValid: /[a-zA-Z0-9]+@gmail\.com$/.test(action.value) }
+    }
+    if (action.type === 'INPUT_BLUR') {
+        return { value: state.value, isValid: /[a-zA-Z0-9]+@gmail\.com$/.test(state.value) }
+    }
+    return { value: '', isValid: false }
+}
+function passReducer(state, action) {
+    if (action.type === "USER_INPUT") {
+        return { value: action.value, isValid: action.value.length > 7 }
+    }
+    if (action.type === 'INPUT_BLUR') {
+        return { value: state.value, isValid: state.value.length > 7 }
+    }
+    return { value: '', isValid: false }
+}
+
 function Authenticate(props) {
-    const [enteredEmail, setEnteredEmail] = useState('')
-    const [isEmailValid, setIsEmailValid] = useState(false)
-    const [enteredPassword, setEnteredPassword] = useState('')
-    const [isPassValid, setIsPassValid] = useState(false)
+    const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: true })
+    const [passState, dispatchPass] = useReducer(passReducer, { value: '', isValid: true })
+    const [isFormValid, setIsFormValid] = useState(false)
+
 
     useEffect(() => {
-        //debouncing
         const timer = setTimeout(() => {
-            console.log('Validating form');
-            const emailValid = /[a-zA-Z0-9]+@gmail.com$/.test(enteredEmail)
-            const passValid = enteredPassword.trim().length > 7
-            setIsEmailValid(emailValid)
-            setIsPassValid(passValid)
+            console.log('calliing form validation.');
+            setIsFormValid(emailState.isValid && passState.isValid)
         }, 500);
-        return () => {
-            console.log('Cleaning up...before next call.');
-            clearTimeout(timer)
-        }
-    }, [enteredEmail, enteredPassword])
+        return () => { clearTimeout(timer) }
+    }, [emailState.isValid, passState.isValid])
+
+    function validateEmail() {
+        dispatchEmail({ type: 'INPUT_BLUR' })
+    }
+    function validatePass() {
+        dispatchPass({ type: 'INPUT_BLUR' })
+    }
     function onEmailChange(event) {
-        setEnteredEmail(event.target.value)
+        dispatchEmail({ type: 'USER_INPUT', value: event.target.value })
     }
     function onPassChange(event) {
-        setEnteredPassword(event.target.value)
+        dispatchPass({ type: 'USER_INPUT', value: event.target.value })
+
     }
     function logInhandler(event) {
         event.preventDefault()
@@ -35,13 +55,17 @@ function Authenticate(props) {
         <form className='form' onSubmit={logInhandler}>
             <div className='form_control'>
                 <label>Email</label>
-                <input className={!isEmailValid ? 'invalid' : ''} value={enteredEmail} type='email' placeholder='Enter email' onChange={onEmailChange}></input>
+                <input className={!emailState.isValid ? 'invalid' : ''}
+                    onBlur={validateEmail}
+                    value={emailState.value} type='email' placeholder='Enter email' onChange={onEmailChange}></input>
             </div>
             <div className='form_control'>
                 <label>Password</label>
-                <input className={!isPassValid ? 'invalid' : ''} value={enteredPassword} type='password' placeholder='Enter Password' onChange={onPassChange}></input>
+                <input className={!passState.isValid ? 'invalid' : ''}
+                    onBlur={validatePass}
+                    value={passState.value} type='password' placeholder='Enter Password' onChange={onPassChange}></input>
             </div>
-            <button className='btn_login' type='submit' disabled={!(isEmailValid && isPassValid)}>LogIn</button>
+            <button className='btn_login' type='submit' disabled={!(isFormValid)}>LogIn</button>
         </form>
     </main>
 }

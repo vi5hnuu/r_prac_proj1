@@ -1,0 +1,22 @@
+.header_actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+
+  list-style: none;
+}
+.header_actions li {
+  font-size: 1.6rem;
+  letter-spacing: 0.1rem;
+  color: #fff;
+}
+.header_actions li:nth-of-type(3) {
+  background-color: #f47d91;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  transition: all 1s;
+}
+.header_actions li:hover {
+  cursor: pointer;
+}
